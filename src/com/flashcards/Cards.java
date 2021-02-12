@@ -2,42 +2,46 @@ package com.flashcards;
 
 import java.io.*;
 import java.util.*;
+import static com.flashcards.Main.*;
 
 import static java.util.stream.Collectors.toMap;
 
 class Cards{
+
     private final Map<String, String> flashCards;
     private final Map<String, Integer> hardestCard;
-    private final Scanner in;
     private String term;
     private String definition;
     private int mistakes;
 
     public Cards() {
-        this.flashCards = new LinkedHashMap<>();
-        this.hardestCard = new LinkedHashMap<>();
-        this.in = new Scanner(System.in);
-        this.term = null;
-        this.definition = null;
+        this.flashCards = new HashMap<>();
+        this.hardestCard = new HashMap<>();
+        this.term = "";
+        this.definition = "";
         this.mistakes = 0;
     }
 
-    protected void addCard(){
-        System.out.println("The card:");
-        term = in.nextLine();
-        if(flashCards.containsKey(term)){
-            System.out.println("The card \"" + term + "\" already exists.");
-            term = null;
-            return;
-        }
+    protected void addCard() {
+        do {
+            System.out.println("The card:");
+            term = in.nextLine().trim();
+            if (flashCards.containsKey(term)) {
+                System.out.println("The card \"" + term + "\" already exists. Enter again:");
+                term = "";
+            }
+            if (term.isEmpty()) System.err.println("Card can't be empty. Try again!");
+        } while (term.equals(""));
 
-        System.out.println("The definition of the card:");
-        definition = in.nextLine();
-        if(flashCards.containsValue(definition)){
-            System.out.println("The definition \"" + definition + "\" already exists.");
-            definition = null;
-            return;
-        }
+        do{
+            System.out.println("The definition of the card:");
+            definition = in.nextLine().trim();
+            if(flashCards.containsValue(definition)){
+                System.out.println("The definition \"" + definition + "\" already exists.");
+                definition = "";
+            }
+            if (definition.isEmpty()) System.err.println("Definition can't be empty. Try again!");
+        } while (definition.equals(""));
 
         flashCards.put(term,definition);
         hardestCard.put(term,0);
@@ -89,14 +93,14 @@ class Cards{
     }
 
     protected void ask(){
-        if(flashCards.size()!=0) {
+        if(flashCards.size() != 0) {
             System.out.println("How many times to ask?");
-            String numOfQuestion = in.nextLine();
+            String numOfQuestions = in.nextLine();
             String answer;
             int i = 0;
-            while (i < Integer.parseInt(numOfQuestion)) {
+            while (i < Integer.parseInt(numOfQuestions)) {
                 for (var entry : flashCards.entrySet()) {
-                    if (i++ < Integer.parseInt(numOfQuestion)) {
+                    if (i++ < Integer.parseInt(numOfQuestions)) {
                         System.out.println("Print the definition of \"" + entry.getKey() + "\":");
                         answer = in.nextLine();
                         if (answer.equals(entry.getValue()))
