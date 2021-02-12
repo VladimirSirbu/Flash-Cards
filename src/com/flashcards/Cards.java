@@ -75,7 +75,7 @@ class Cards{
             }
             System.out.println(count + " cards have been loaded.");
         } catch (FileNotFoundException e) {
-            System.out.println("File not found.");
+            System.err.println("File not found.");
         }
     }
 
@@ -108,12 +108,10 @@ class Cards{
                         else if (flashCards.containsValue(answer)) {
                             System.out.println("Wrong answer. (The correct one is \"" + entry.getValue() + "\", " +
                                     " you've just written the definition of \"" + getKeyByValue(flashCards, answer) + "\" card.)");
-                            //Count errors for this card
-                            countCardErrors(hardestCard, entry.getKey());
+                            incrementCardErrors(hardestCard, entry.getKey());
                         } else {
                             System.out.println("Wrong answer. The correct one is \"" + entry.getValue() + "\".");
-                            //Count errors for this card
-                            countCardErrors(hardestCard, entry.getKey());
+                            incrementCardErrors(hardestCard, entry.getKey());
                         }
                     } else
                         break;
@@ -124,19 +122,19 @@ class Cards{
     }
 
     protected void hardestCard(){
-        if(hardestCard.size()!=0) {
+        if(hardestCard.size() != 0) {
             //sort hardestCard map by value in desc order
             Map<String, Integer> sortedByValueDesc = hardestCard.entrySet()
                     .stream()
                     .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                     .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-            int maxValue = sortedByValueDesc.values().stream().findFirst().orElseThrow();
+            int maxValue = (int) sortedByValueDesc.values().toArray()[0];
             if (maxValue == 0) {
                 System.out.println("There are no cards with errors.");
             } else {
                 // add to a list all cards with maximum mistakes
-                List<String> mistakeCards = new LinkedList<>();
+                List<String> mistakeCards = new ArrayList<>();
                 for (var entry : sortedByValueDesc.entrySet())
                     if (entry.getValue().equals(maxValue))
                         mistakeCards.add(entry.getKey());
@@ -146,15 +144,16 @@ class Cards{
                 if (mistakeCards.size() == 1)
                     System.out.print("The hardest card is \"" + mistakeCards.get(0) + "\". ");
                 else if (mistakeCards.size() > 1) {
-                    System.out.print("The hardest card is ");
+                    System.out.print("The hardest cards is ");
                     for (String country : mistakeCards)
                         if (country.equals(mistakeCards.get(mistakeCards.size() - 1)))
                             System.out.print("\"" + country + "\". ");
                         else
                             System.out.print("\"" + country + "\", ");
                 }
-                System.out.println(" You have " + maxValue + " errors answering them.");
+                System.out.println("You have " + maxValue + " errors answering them.");
             }
+
         } else
             System.out.println("There are no cards with errors.");
     }
@@ -173,11 +172,8 @@ class Cards{
         return null;
     }
 
-    private void countCardErrors(Map<String, Integer> hardestCard, String key){
-        if (hardestCard.containsKey(key))
+    private void incrementCardErrors(Map<String, Integer> hardestCard, String key){
             hardestCard.put(key, hardestCard.get(key)+1);
-        else
-            hardestCard.put(key, 1);
     }
 
 }
