@@ -10,3 +10,15 @@ I was implemented this project with following action:
 - ask (the program asks you about how many times you want to be asking about your cards; examples of this in the below screen)
 - hardest card (when you were asked you probably made mistakes, and this mistakes hold in `mistake` section; example in below screen)
 - exit (exit from the program);
+
+**#add**
+<img src="/images/add.JPG">
+
+**#import**
+<img src="/images/import.JPG">
+
+**#hardest card**
+<img src="/images/hardest_card.JPG">
+
+**#ask**
+<img src="/images/ask.JPG">
