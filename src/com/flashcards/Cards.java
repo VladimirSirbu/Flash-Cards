@@ -22,7 +22,16 @@ class Cards{
         this.mistakes = 0;
     }
 
-    protected void addCard() {
+    public void addCard() {
+        addTerm();
+        addDefinition();
+
+        flashCards.put(term,definition);
+        hardestCard.put(term,0);
+        System.out.println("The pair (\"" + term + "\":\"" + definition + "\") has been added.");
+    }
+
+    private void addTerm() {
         do {
             System.out.println("The card:");
             term = in.nextLine().trim();
@@ -32,7 +41,9 @@ class Cards{
             }
             if (term.isEmpty()) System.err.println("Card can't be empty. Try again!");
         } while (term.equals(""));
+    }
 
+    private void addDefinition() {
         do{
             System.out.println("The definition of the card:");
             definition = in.nextLine().trim();
@@ -42,13 +53,9 @@ class Cards{
             }
             if (definition.isEmpty()) System.err.println("Definition can't be empty. Try again!");
         } while (definition.equals(""));
-
-        flashCards.put(term,definition);
-        hardestCard.put(term,0);
-        System.out.println("The pair (\"" + term + "\":\"" + definition + "\") has been added.");
     }
 
-    protected void removeCard(){
+    public void removeCard(){
         System.out.println("The card:");
         term = in.nextLine();
         if(flashCards.containsKey(term)) {
@@ -59,7 +66,7 @@ class Cards{
             System.out.println("Can't remove \"" + term + "\", there is no such card.");
     }
 
-    protected void importCard(){
+    public void importCard(){
         int count = 0;
         System.out.println("File name:");
         String pathToFile = in.nextLine();
@@ -79,7 +86,7 @@ class Cards{
         }
     }
 
-    protected void exportCard(){
+    public void exportCard(){
         System.out.println("File name:");
         String pathToFile = in.nextLine();
         try (FileWriter fileWriter = new FileWriter(new File(pathToFile))) {
@@ -92,7 +99,7 @@ class Cards{
         }
     }
 
-    protected void ask(){
+    public void ask(){
         if(flashCards.size() != 0) {
             System.out.println("How many times to ask?");
             String numOfQuestions = in.nextLine();
@@ -108,10 +115,10 @@ class Cards{
                         else if (flashCards.containsValue(answer)) {
                             System.out.println("Wrong answer. (The correct one is \"" + entry.getValue() + "\", " +
                                     " you've just written the definition of \"" + getKeyByValue(flashCards, answer) + "\" card.)");
-                            incrementCardErrors(hardestCard, entry.getKey());
+                            incrementCardErrors(entry.getKey());
                         } else {
                             System.out.println("Wrong answer. The correct one is \"" + entry.getValue() + "\".");
-                            incrementCardErrors(hardestCard, entry.getKey());
+                            incrementCardErrors(entry.getKey());
                         }
                     } else
                         break;
@@ -121,7 +128,7 @@ class Cards{
             System.out.println("There are no cards.");
     }
 
-    protected void hardestCard(){
+    public void hardestCard(){
         if(hardestCard.size() != 0) {
             //sort hardestCard map by value in desc order
             Map<String, Integer> sortedByValueDesc = hardestCard.entrySet()
@@ -158,7 +165,7 @@ class Cards{
             System.out.println("There are no cards with errors.");
     }
 
-    protected void resetStats(){
+    public void resetStats(){
         hardestCard.replaceAll((key, value) -> 0);
         System.out.println("Card statistics has been reset.");
     }
@@ -172,7 +179,7 @@ class Cards{
         return null;
     }
 
-    private void incrementCardErrors(Map<String, Integer> hardestCard, String key){
+    private void incrementCardErrors(String key){
             hardestCard.put(key, hardestCard.get(key)+1);
     }
 
