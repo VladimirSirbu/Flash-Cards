@@ -18,7 +18,7 @@ public class Main {
                 case "export" -> cards.exportCard();
                 case "ask" -> cards.ask();
                 case "hardest card" -> cards.hardestCard();
-                case "reset stats" -> cards.resetStats();
+                case "reset status" -> cards.resetStats();
                 case "exit" -> {
                     System.out.println("Bye bye!");
                     System.exit(0);
